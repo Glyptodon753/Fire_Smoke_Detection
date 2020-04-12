@@ -31,19 +31,23 @@ def cam(model, x, threshold=0.3, classes=('Fire', 'Neutral', 'Smoke')):
     heatmap /= np.max(heatmap)
     plt.matshow(heatmap)
     plt.show()
-
     heatmap = cv2.resize(heatmap, (x.shape[2], x.shape[1]))
+
     class_area = np.sum(heatmap > threshold)
 
     heatmap = np.uint8(255 * heatmap)
     heatmap = cv2.applyColorMap(heatmap, cv2.COLORMAP_JET)
+
     x = np.squeeze(x, axis=0) * 255.0
     x = x.astype('uint8')[:, :, ::-1]
+
     superimposed_img = heatmap * 0.4 + x
 
-    cv2.imwrite('cam.jpg', superimposed_img)
+    cv2.imwrite('Class Activation Map/origin.jpg', x)
+    cv2.imwrite('Class Activation Map/heatmap.jpg', heatmap)
+    cv2.imwrite('Class Activation Map/cam.jpg', superimposed_img)
 
-    return class_area
+    return classes[int(class_idx)], class_area
 
 
 if __name__ == '__main__':
@@ -51,6 +55,7 @@ if __name__ == '__main__':
     image = dataset.load_single_image(0, 999).astype('float32') / 255.0
 
     model = load_model('FS.h5')
-    area = cam(model, image)
-    print(area)
-    print(area/(image.shape[0]*image.shape[1]))
+    predict_class, area = cam(model, image)
+    image_area = image.shape[0]*image.shape[1]
+    print('{0:s}: {1:d}/{2:d} pixels'.format(predict_class, area, image_area))
+    print('{0:s}: {1:.5f} %'.format(predict_class, area/image_area))

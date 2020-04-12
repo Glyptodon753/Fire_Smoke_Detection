@@ -15,6 +15,7 @@ model.add(layers.Conv2D(64, (3, 3), activation='relu'))
 model.add(layers.GlobalAveragePooling2D())
 
 model.add(layers.Dense(512, activation='relu'))
+model.add(layers.Dropout(0.2))
 model.add(layers.Dense(3, activation='softmax'))
 
 model.compile(optimizer='rmsprop',
@@ -28,7 +29,7 @@ batch = 16
 
 record = model.fit_generator(dataset.generator('train', batch_size=batch),
                              steps_per_epoch=train_size//batch,
-                             epochs=300,
+                             epochs=500,
                              validation_data=dataset.generator('validation', batch_size=batch),
                              validation_steps=validation_size//batch,
                              verbose=1)
