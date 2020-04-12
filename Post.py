@@ -86,11 +86,8 @@ if __name__ == '__main__':
     cm = confusion_matrix(model, dataset, dataset.validation_set)
 
     plot_confusion_matrix(cm)
-"""
     test_loss, test_acc = model.evaluate_generator(dataset.generator('test', batch_size=10),
                                                    steps=dataset.get_size('test')//10,
                                                    verbose=1)
     print('test accuracy: {}'.format(test_acc))
     print('test loss: {}'.format(test_loss))
-
-"""
