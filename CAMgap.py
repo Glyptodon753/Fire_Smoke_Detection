@@ -38,7 +38,7 @@ def cam(model, x, threshold=0.3, classes=('Fire', 'Neutral', 'Smoke')):
     heatmap = np.uint8(255 * heatmap)
     heatmap = cv2.applyColorMap(heatmap, cv2.COLORMAP_JET)
     x = np.squeeze(x, axis=0) * 255.0
-    x = x.astype('uint32')[:, :, ::-1]
+    x = x.astype('uint8')[:, :, ::-1]
     superimposed_img = heatmap * 0.4 + x
 
     cv2.imwrite('cam.jpg', superimposed_img)
@@ -46,10 +46,11 @@ def cam(model, x, threshold=0.3, classes=('Fire', 'Neutral', 'Smoke')):
     return class_area
 
 
-dataset = Data('Dataset', 1200)
-image = dataset.load_single_image(0, 999).astype('float32') / 255.0
+if __name__ == '__main__':
+    dataset = Data('Dataset', 1200)
+    image = dataset.load_single_image(0, 999).astype('float32') / 255.0
 
-model = load_model('FS.h5')
-area = cam(model, image)
-print(area)
-print(area/(image.shape[0]*image.shape[1]))
+    model = load_model('FS.h5')
+    area = cam(model, image)
+    print(area)
+    print(area/(image.shape[0]*image.shape[1]))
