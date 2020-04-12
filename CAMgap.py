@@ -10,9 +10,10 @@ def cam(model, x, threshold=0.3, classes=('Fire', 'Neutral', 'Smoke')):
     x = np.expand_dims(x, axis=0)
 
     last_conv_layer = model.get_layer('conv2d_3')
-    pred = model.predict(x)
-    class_idx = np.argmax(pred[0])
-    print(pred)
+    predict = model.predict(x)
+    class_idx = np.argmax(predict[0])
+    print(predict)
+    print(classes[int(class_idx)])
 
     class_output = model.output[:, class_idx]
     gap_weights = model.get_layer("global_average_pooling2d_1")
@@ -36,7 +37,6 @@ def cam(model, x, threshold=0.3, classes=('Fire', 'Neutral', 'Smoke')):
 
     heatmap = np.uint8(255 * heatmap)
     heatmap = cv2.applyColorMap(heatmap, cv2.COLORMAP_JET)
-    print(type(heatmap))
     x = np.squeeze(x, axis=0) * 255.0
     x = x.astype('uint32')[:, :, ::-1]
     superimposed_img = heatmap * 0.4 + x
@@ -47,7 +47,7 @@ def cam(model, x, threshold=0.3, classes=('Fire', 'Neutral', 'Smoke')):
 
 
 dataset = Data('Dataset', 1200)
-image = dataset.load_single_image(0, 70).astype('float32') / 255.0
+image = dataset.load_single_image(0, 999).astype('float32') / 255.0
 
 model = load_model('FS.h5')
 area = cam(model, image)

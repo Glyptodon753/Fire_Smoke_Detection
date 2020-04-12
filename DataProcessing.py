@@ -9,13 +9,13 @@ class Data:
                  class_n,
                  classes=('Fire', 'Neutral', 'Smoke'),
                  test_rate=0.2,
-                 validation_ratio=0.1,
+                 validation_rate=0.1,
                  ):
         self.path = path
         self.classes = classes
         self.test_set = np.arange(0, int(class_n * test_rate))
-        self.validation_set = np.arange(int(class_n * test_rate), int(class_n * (test_rate + validation_ratio)))
-        self.train_set = np.arange(int(class_n * (test_rate + validation_ratio)), class_n)
+        self.validation_set = np.arange(int(class_n * test_rate), int(class_n * (test_rate + validation_rate)))
+        self.train_set = np.arange(int(class_n * (test_rate + validation_rate)), class_n)
         self.test_labels = np.zeros((len(self.test_set)*3,)).astype('int32')
         self.test_images = np.zeros((len(self.test_set)*3,)).astype('int32')
 
