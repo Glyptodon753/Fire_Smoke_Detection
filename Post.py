@@ -26,8 +26,8 @@ def confusion_matrix(model, dataset, indexes, classes=('Fire', 'Neutral', 'Smoke
     for class_ in range(len(classes)):
         for i in indexes:
             image = dataset.load_single_image(class_, i)
-            predict = model.predict_classes(np.expand_dims(
-                image.astype('float32') // 255.0, axis=0))
+            predict = model.predict(np.expand_dims(
+                image.astype('float32') / 255.0, axis=0))
             predict_label = int(np.argmax(predict))
             matrix[class_][predict_label] += 1
             image = Image.fromarray(image)
