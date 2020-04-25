@@ -91,6 +91,40 @@ def sub_plot(images, title, width, height):
     return None
 
 
+def load_image(path):
+    try:
+        image = Image.open(path).convert('RGB')
+        image = crop(image, 256, 192)
+        return image
+    except OSError:
+        print('{} could not open.'.format(path))
+        return None
+
+
+def crop(image, width, height):
+    w, h = image.size
+
+    ww = w / width
+    hh = h / height
+    if ww <= hh:
+        ratio = width / w
+        image = image.resize((width, math.ceil(h * ratio)))
+    else:
+        ratio = height / h
+        image = image.resize((math.ceil(w * ratio), height))
+
+    if image.size[0] < width or image.size[1] < height:
+        return crop(image, width, height)
+
+    w, h = image.size
+    left = (w - width) / 2
+    top = (h - height) / 2
+    right = (w + width) / 2
+    bottom = (h + height) / 2
+    image = image.crop((left, top, right, bottom))
+    return np.asarray(image)
+
+
 if __name__ == '__main__':
     shuffle_data('Dataset')
 

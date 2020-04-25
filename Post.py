@@ -1,6 +1,7 @@
 from keras.models import load_model
 from DataProcessing import Data
 from PIL import Image
+from keras import models
 import numpy as np
 import os
 import shutil
@@ -78,6 +79,35 @@ def plot_accuracy_loss(history):
     plt.legend()
     plt.savefig('Chart/loss.png', format='png')
     plt.show()
+
+
+def feature_map(model, x, name, classes=('Fire', 'Neutral', 'Smoke')):
+    x = np.expand_dims(x, axis=0)
+    predict = model.predict(x)
+    class_idx = np.argmax(predict[0])
+    print(predict)
+    print(classes[int(class_idx)])
+
+    layer_outputs = [layer.output for layer in model.layers[:3]]
+    activation_model = models.Model(inputs=model.input, outputs=layer_outputs)
+    activations = activation_model.predict(x)
+
+    plt.rcParams['font.size'] = 5
+    fig = plt.figure()
+    position = 1
+    height = 8
+    width = 8
+    title = [_ for _ in range(64)]
+    for i in range(height):
+        for j in range(width):
+            plt.subplot(height, width, position)
+            plt.imshow(activations[4][0, :, :, position - 1])
+            plt.title(title[position - 1])
+            plt.axis('off')
+            position += 1
+    fig.tight_layout()
+    plt.savefig('feature map/{}'.format(name))
+    # plt.show()
 
 
 if __name__ == '__main__':
