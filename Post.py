@@ -38,7 +38,7 @@ def confusion_matrix(model, dataset, indexes, classes=('Fire', 'Neutral', 'Smoke
     return matrix
 
 
-def plot_confusion_matrix(matrix, classes=('Fire', 'Neutral', 'Smoke')):
+def plot_confusion_matrix(matrix, rate=True, classes=('Fire', 'Neutral', 'Smoke')):
     fig = plt.figure()
     ax = fig.add_subplot(111)
     ax.imshow(np.array(matrix), cmap='Oranges')
@@ -46,14 +46,21 @@ def plot_confusion_matrix(matrix, classes=('Fire', 'Neutral', 'Smoke')):
     width, height = matrix.shape
     for x in range(width):
         for y in range(height):
-            ax.annotate(str(matrix[x][y]), xy=(y, x),
+            if rate:
+                s = '{0:.3f}'.format(matrix[x][y])
+            else:
+                s = str(matrix[x][y])
+            ax.annotate(s, xy=(y, x),
                         horizontalalignment='center',
                         verticalalignment='center')
 
     plt.xticks(range(len(classes)), classes)
     plt.yticks(range(len(classes)), classes)
     ax.xaxis.tick_top()
-    plt.savefig('Chart/confusion_matrix.png', format='png')
+    if rate:
+        plt.savefig('Chart/confusion_matrix_rate.png', format='png')
+    else:
+        plt.savefig('Chart/confusion_matrix.png', format='png')
     plt.show()
 
 
@@ -114,7 +121,8 @@ if __name__ == '__main__':
     model = load_model('FS.h5')
     dataset = Data('Dataset', 1200)
     cm = confusion_matrix(model, dataset, dataset.validation_set)
-
+    plot_confusion_matrix(cm, rate=False)
+    cm = cm / cm.sum(axis=1)[:, np.newaxis]
     plot_confusion_matrix(cm)
     test_loss, test_acc = model.evaluate_generator(dataset.generator('test', batch_size=10),
                                                    steps=dataset.get_size('test')//10,

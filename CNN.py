@@ -7,14 +7,14 @@ from DataProcessing import Data
 model = models.Sequential()
 model.add(layers.Conv2D(32, (3, 3), activation='relu', input_shape=(192, 256, 3)))
 model.add(layers.MaxPooling2D((2, 2)))
+model.add(layers.Conv2D(32, (3, 3), activation='relu'))
+model.add(layers.MaxPooling2D((2, 2)))
 model.add(layers.Conv2D(64, (3, 3), activation='relu'))
-# model.add(layers.MaxPooling2D((2, 2)))
-# model.add(layers.Conv2D(64, (3, 3), activation='relu'))
 # model.add(layers.MaxPooling2D((2, 2)))
 # model.add(layers.Conv2D(64, (3, 3), activation='relu'))
 model.add(layers.GlobalAveragePooling2D())
 
-model.add(layers.Dense(256, activation='relu'))
+model.add(layers.Dense(128, activation='relu'))
 # model.add(layers.Dropout(0.2))
 model.add(layers.Dense(3, activation='softmax'))
 
@@ -30,7 +30,7 @@ batch = 16
 
 record = model.fit_generator(dataset.generator('train', batch_size=batch),
                              steps_per_epoch=train_size//batch,
-                             epochs=1000,
+                             epochs=50,
                              validation_data=dataset.generator('validation', batch_size=batch),
                              validation_steps=validation_size//batch,
                              verbose=1)

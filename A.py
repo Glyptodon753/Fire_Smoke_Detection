@@ -1,12 +1,13 @@
-from PIL import Image
+from PIL import Image, ImageFilter
 import matplotlib.pyplot as plt
-import os
+import numpy as np
 
 
-files = os.listdir('sky')
-for file in files:
-    image_file = Image.open("sky/{}".format(file))
-    image_file = image_file.convert('L')
-    plt.matshow(image_file, cmap='gray')
-    plt.show()
+path = 'Dataset/Smoke/0999.jpg'
+image = Image.open(path).convert('RGB')
+image = image.filter(ImageFilter.GaussianBlur(radius=4))
+plt.figure()
+plt.imshow(image)
+plt.show()
+
 
