@@ -119,7 +119,7 @@ def feature_map(model, x, name, classes=('Fire', 'Neutral', 'Smoke')):
 
 if __name__ == '__main__':
     model = load_model('FS.h5')
-    dataset = Data('Dataset', 1200)
+    dataset = Data('Dataset', 1600)
     cm = confusion_matrix(model, dataset, dataset.validation_set)
     plot_confusion_matrix(cm, rate=False)
     cm = cm / cm.sum(axis=1)[:, np.newaxis]

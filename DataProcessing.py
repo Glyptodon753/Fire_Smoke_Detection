@@ -23,7 +23,7 @@ class Data:
         try:
             image = Image.open('{0:s}/{1:s}/{2:04d}.jpg'.format(
                 self.path, self.classes[class_], index)).convert('RGB')
-            image = image.filter(ImageFilter.GaussianBlur(radius=3))
+            # image = image.filter(ImageFilter.GaussianBlur(radius=2))
             image = self.crop(image, 256, 192)
             return image
         except OSError:

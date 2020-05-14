@@ -51,8 +51,8 @@ def cam(model, x, threshold=0.3, classes=('Fire', 'Neutral', 'Smoke')):
 
 
 if __name__ == '__main__':
-    dataset = Data('Dataset', 1200)
-    image = dataset.load_single_image(2, 999).astype('float32') / 255.0
+    dataset = Data('Dataset', 1600)
+    image = dataset.load_single_image(0, 7).astype('float32') / 255.0
 
     model = load_model('FS.h5')
     predict_class, area = cam(model, image)
