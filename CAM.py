@@ -22,13 +22,15 @@ def cam(model, x, threshold=0.3, classes=('Fire', 'Neutral', 'Smoke')):
     iterate = K.function([model.input], [grads, last_conv_layer.output[0]])
     pooled_grads_value, conv_layer_output_value = iterate([x])
     pooled_grads_value = np.squeeze(pooled_grads_value, axis=0)
-    print(pooled_grads_value)
+    print(type(pooled_grads_value))
     for i in range(len(pooled_grads_value)):
         conv_layer_output_value[:, :, i] *= pooled_grads_value[i]
-
+    print(conv_layer_output_value.shape)
+    print(pooled_grads_value.shape)
     heatmap = np.mean(conv_layer_output_value, axis=-1)
     heatmap = np.maximum(heatmap, 0)
     heatmap /= np.max(heatmap)
+    print(heatmap.shape)
     plt.matshow(heatmap)
     plt.show()
     heatmap = cv2.resize(heatmap, (x.shape[2], x.shape[1]))
@@ -42,6 +44,8 @@ def cam(model, x, threshold=0.3, classes=('Fire', 'Neutral', 'Smoke')):
     x = x.astype('uint8')[:, :, ::-1]
 
     superimposed_img = heatmap * 0.4 + x
+    combine = np.concatenate((x, heatmap, superimposed_img), axis=1)
+    cv2.imwrite('origin_heatmap_cam.png', combine)
 
     cv2.imwrite('Class Activation Map/origin.jpg', x)
     cv2.imwrite('Class Activation Map/heatmap.jpg', heatmap)
@@ -56,6 +60,7 @@ if __name__ == '__main__':
 
     model = load_model('FS.h5')
     predict_class, area = cam(model, image)
+
     image_area = image.shape[0]*image.shape[1]
     print('{0:s}: {1:d}/{2:d} pixels'.format(predict_class, area, image_area))
     print('{0:s}: {1:.5f} %'.format(predict_class, area/image_area))

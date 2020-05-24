@@ -16,8 +16,8 @@ class Data:
         self.test_set = np.arange(0, int(class_n * test_rate))
         self.validation_set = np.arange(int(class_n * test_rate), int(class_n * (test_rate + validation_rate)))
         self.train_set = np.arange(int(class_n * (test_rate + validation_rate)), class_n)
-        self.test_labels = np.zeros((len(self.test_set)*3,)).astype('int32')
-        self.test_images = np.zeros((len(self.test_set)*3,)).astype('int32')
+        self.test_labels = np.zeros((len(self.test_set)*len(classes),)).astype('int32')
+        self.test_images = np.zeros((len(self.test_set)*len(classes),)).astype('int32')
 
     def load_single_image(self, class_, index):
         try:
