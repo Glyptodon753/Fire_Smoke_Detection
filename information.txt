@@ -1,0 +1,8 @@
+dataset: ('F', 'WS', 'BS', 'V')
+input shape: (192, 256, 3)
+filters: (16, 32)
+dense: (256,)
+output shape: 4
+epochs: 40
+test accuracy: 0.9919999837875366
+test loss: 4.947197794535896e-06

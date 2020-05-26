@@ -8,12 +8,16 @@ def runCNN(dataset, input_shape, filters, dense, output_shape, epochs):
     model = models.Sequential()
     model.add(layers.Conv2D(filters[0], (3, 3),
                             activation='relu', input_shape=input_shape))
+    model.add(layers.MaxPooling2D((2, 2)))
     for f in filters[1:]:
-        model.add(layers.MaxPooling2D((2, 2)))
         model.add(layers.Conv2D(f, (3, 3),
                                 activation='relu', input_shape=input_shape))
+        model.add(layers.MaxPooling2D((2, 2)))
 
-    model.add(layers.GlobalAveragePooling2D(input_shape=input_shape))
+    # model.add(layers.GlobalAveragePooling2D(input_shape=input_shape))
+
+    model.add(layers.Flatten())
+    model.add(layers.Dropout(0.2))
 
     for d in dense:
         model.add(layers.Dense(d, activation='relu'))
