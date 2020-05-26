@@ -25,7 +25,7 @@ class Data:
                 self.path, self.classes[class_], index)).convert('RGB')
             # image = image.filter(ImageFilter.GaussianBlur(radius=2))
             image = self.crop(image, 256, 192)
-            return image
+            return np.asarray(image)
         except OSError:
             print('{} of class {} could not open.'.format(index, self.classes[class_]))
             return None
@@ -66,6 +66,7 @@ class Data:
                 self.test_images[count:count+len(self.test_set)] = self.test_set
                 count += len(self.test_set)
         count = 0
+
         while True:
             images = []
             labels = []

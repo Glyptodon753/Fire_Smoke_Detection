@@ -14,10 +14,12 @@ def shuffle_data(path, n, low_len=256):
             i = 0
             for image_name in image_list:
                 try:
-                    image = Image.open('{}/{}/{}'.format(path, class_name, image_name)).convert('RGB')
+                    image = Image.open('{}/{}/{}'.format(
+                        path, class_name, image_name)).convert('RGB')
                 except OSError:
                     print('{} of class {} could not open.'.format(image_name, class_name))
                     continue
+                """
                 w, h = image.size
                 if w <= h:
                     ratio = low_len / w
@@ -25,39 +27,13 @@ def shuffle_data(path, n, low_len=256):
                 else:
                     ratio = low_len / h
                     image = image.resize((math.ceil(w * ratio), low_len))
-
+                """
                 os.remove('{}/{}/{}'.format(path, class_name, image_name))
                 image.save('{0:s}/{1:s}/{2:0{3}d}.jpg'.format(
                     path, class_name, choices[i], a))
                 i += 1
 
     print('shuffling completed')
-    return None
-
-
-def images_to_npz(path, npz_name, width=256, height=256):
-    class_list = os.listdir(path)
-    data = {}
-
-    for class_name in class_list:
-        image_list = os.listdir('{}/{}'.format(path, class_name))
-        tmp_array = np.empty((len(image_list), height, width, 3), dtype='uint8')
-        i = 0
-        for image_name in image_list:
-            try:
-                image = Image.open('{}/{}/{}'.format(path, class_name, image_name)).convert('RGB')
-            except OSError:
-                print('{} of class {} could not open.'.format(image_name, class_name))
-                continue
-
-            tmp_array[i] = crop(image, width, height)
-            i += 1
-
-        print('class {} completed.'.format(class_name))
-        data[class_name] = tmp_array
-
-    np.savez_compressed(npz_name, **data)
-    print('all classes completed')
     return None
 
 
@@ -76,6 +52,11 @@ def sub_plot(images, title, width, height):
 
 
 def load_image(path):
+    """
+    loading single image and crop size of it to (256, 192)
+    :param path: image location
+    :return: pillow Image
+    """
     try:
         image = Image.open(path).convert('RGB')
         image = crop(image, 256, 192)
